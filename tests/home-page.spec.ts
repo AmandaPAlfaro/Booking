@@ -25,14 +25,37 @@ test('Verificar que el usuario pueda navegar por el manu', async ({ page }) => {
 });
 
 
-test('Verificar q se muestre el carrusel “Busca por tipo de alojamiento”', async ({ page }) => {
+test('Verificar que el usuario pueda navegar por las opciones del carrusel”', async ({ page }) => {
   const bookingPage = new BookingPage(page);
 
   await bookingPage.navigate();
 
-  // Verificar que el carrusel contiene tarjetas.
-  const carruselItems = page.locator('[data-testid="property-type-carousel"] [role="listitem"]');
-  //await expect(carruselItems).toHaveCountGreaterThan(0);
+  await page.click('//*[@id=":r1f:"]/li[2]/a');
+  await expect(page.url()).toContain('https://www.booking.com/apartments/index');
 
- 
+  await page.click('//*[@id="breadcrumb"]/ol/li[1]/div/a');
+
+
+
+  // Lista de elementos a los que quieres hacer click y su URL esperada
+  const secciones = [
+    { xpath: '//*[@id=":r1f:"]/li[1]/a', urlEsperada: '/hotel' },
+    { xpath: '//*[@id=":r1f:"]/li[2]/a', urlEsperada: '/apartments' },
+    { xpath: '//*[@id=":r1f:"]/li[3]/a', urlEsperada: '/resorts' },
+    { xpath: '//*[@id=":r1f:"]/li[4]/a', urlEsperada: '/villas' },
+    { xpath: '//*[@id=":r1f:"]/li[5]/a', urlEsperada: '/chalet' }
+  ];
+
+  for (const seccion of secciones) {
+    // Ir a la sección
+    await page.click(seccion.xpath);
+    await expect(page.url()).toContain(seccion.urlEsperada);
+
+    // Volver al inicio usando breadcrumb
+    await page.click('//*[@id="breadcrumb"]/ol/li[1]/div/a');
+    await expect(page.url()).toContain('https://www.booking.com'); // Ajusta si el home es diferente
+  }
+  
+
+
 });
