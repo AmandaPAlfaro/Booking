@@ -39,5 +39,6 @@ class BookingPage {
         await this.page.click(this.flightsTab);
         await this.page.waitForSelector(this.mainPageFlights);
     }
+    
 }
 module.exports = { BookingPage };
